@@ -22,6 +22,7 @@ export class QuizComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._service.getData();
   }
 
   nextQuestion() {

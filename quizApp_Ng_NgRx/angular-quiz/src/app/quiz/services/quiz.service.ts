@@ -1,24 +1,27 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, map} from "rxjs";
 import {QuizStateInterface} from "../types/quizState.interface";
-import mockData from '../data'
 import {AnswerType} from "../types/answer.type";
 import {QuestionInterface} from "../types/question.interface";
+import {HttpClient} from "@angular/common/http";
+import {BackendQuestionsInterface} from "../types/backendQuestions.interface";
 
 @Injectable()
 export class QuizService {
 
+ readonly apiUrl = 'https://opentdb.com/api.php?amount=10&difficulty=medium&encode=url3986';
+
   initialState: QuizStateInterface = {
-    questions: mockData,
+    questions: [],
     currentQuestionIndex: 0,
     showResults: false,
     correctAnswerCount: 0,
-    answers: this.shuffleAnswers(mockData[0]),
+    answers: [],
     currentAnswer: null
   }
   state$ = new BehaviorSubject<QuizStateInterface>({...this.initialState})
 
-  constructor() {
+  constructor(private _http: HttpClient) {
   }
 
   setState(partialState: Partial<QuizStateInterface>): void {
@@ -43,6 +46,7 @@ export class QuizService {
 
   restart() {
     this.setState(this.initialState)
+    this.getData()
   }
 
   selectAnswer(answer: AnswerType) {
@@ -53,6 +57,20 @@ export class QuizService {
     this.setState({currentAnswer: answer, correctAnswerCount: newCorrectAnswerCount})
   }
 
+  getData(): void {
+    this._http.get<{results: BackendQuestionsInterface[]}>(this.apiUrl)
+      .pipe(map(r => r.results))
+      .subscribe(v => this.loadQuestions(v))
+  }
+
+  private _normalizeQuestions(data: BackendQuestionsInterface[]): QuestionInterface[] {
+    return data.map(q => ({
+      question: decodeURIComponent(q.question),
+      correctAnswer: decodeURIComponent(q.correct_answer),
+      incorrectAnswers: q.incorrect_answers.map(v => decodeURIComponent((v)))
+    }))
+  }
+
   private shuffleAnswers(mockDatum: QuestionInterface): AnswerType[] {
     const unshuffledAnswer = [
       ...mockDatum.incorrectAnswers,
@@ -61,5 +79,14 @@ export class QuizService {
     return unshuffledAnswer
       .map(a => ({sort: Math.random(), value: a}))
       .sort((a, b) => a.sort - b.sort).map(el => el.value)
+  }
+
+  loadQuestions(q: BackendQuestionsInterface[]) {
+    const normalize = this._normalizeQuestions(q);
+    const initialAnswers = this.shuffleAnswers(normalize[0])
+    this.setState({
+      questions: normalize,
+      answers: initialAnswers
+    })
   }
 }

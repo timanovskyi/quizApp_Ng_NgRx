@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {QuizService} from "../../services/quiz.service";
-import {filter, map, Observable, Subscription, tap} from "rxjs";
+import {map, Observable, Subscription} from "rxjs";
 import {QuestionInterface} from "../../types/question.interface";
 import {AnswerType} from "../../types/answer.type";
 
