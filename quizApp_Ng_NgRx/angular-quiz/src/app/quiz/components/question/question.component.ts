@@ -3,6 +3,8 @@ import {QuizService} from "../../services/quiz.service";
 import {map, Observable, Subscription} from "rxjs";
 import {QuestionInterface} from "../../types/question.interface";
 import {AnswerType} from "../../types/answer.type";
+import {select, Store} from "@ngrx/store";
+import {quizSelector} from "../../store/selectors";
 
 @Component({
   selector: 'app-quiz-question',
@@ -18,14 +20,15 @@ export class QuestionComponent implements OnInit, OnDestroy {
 
   subs$: Subscription = new Subscription();
 
-  constructor(private _service: QuizService) {
-    this.question$ = this._service.state$.pipe(map((state) => state.questions[state.currentQuestionIndex]))
-    this.answers$ = this._service.state$.pipe(map((state) => state.answers))
+  constructor(private _service: QuizService,
+              private _store: Store) {
+    this.question$ = this._store.pipe(select(quizSelector)).pipe(map((state) => state.questions[state.currentQuestionIndex]))
+    this.answers$ = this._store.pipe(select(quizSelector)).pipe(map((state) => state.answers))
 
   }
 
   ngOnInit() {
-    this.subs$.add(this._service.state$.pipe(
+    this.subs$.add(this._store.pipe(select(quizSelector)).pipe(
       map((state) => state.currentAnswer))
       .subscribe(v => this.currentAnswer = v)
     )

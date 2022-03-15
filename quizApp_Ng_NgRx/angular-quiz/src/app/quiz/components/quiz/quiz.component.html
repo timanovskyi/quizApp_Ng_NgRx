@@ -1,39 +1,50 @@
-<div class="quiz">
-  <div *ngIf="!(showResults$ | async) && (questionsLength$ | async) else showResults">
-    <div class="score">
-      <p> Question {{currentQuestionIndex$ | async}} / {{questionsLength$ | async}}</p>
-    </div>
-    <app-quiz-question></app-quiz-question>
-    <div class="next-button" (click)="nextQuestion()">
-      <p>
-        Next question
-      </p>
-    </div>
-  </div>
-  <ng-template #showResults>
-    <div class="results">
-      <div class="congratulations">
-        <p>Congratulations</p>
+<div class="loader" *ngIf="(isLoadingSelector$ | async) else showQuiz">
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+</div>
+
+<ng-template #showQuiz>
+  <div class="quiz" *ngIf="(quiz$ | async) as quiz">
+    <div *ngIf="!quiz.showResults && quiz.questions.length else showResults">
+      <div class="score">
+        <p> Question {{quiz.currentQuestionIndex + 1}} / {{quiz.questions.length }}</p>
       </div>
-      <div class="results-info">
-        <div>
-          <p>You have completed quiz</p>
-        </div>
-        <div>
-          <p>
-            You have got <span>{{correctAnswerCount$ | async}}</span> of <span>{{questionsLength$ | async}}</span> right
-          </p>
-        </div>
-      </div>
-      <div (click)="restart()" class="next-button">
+      <app-quiz-question></app-quiz-question>
+      <div class="next-button" (click)="nextQuestion()">
         <p>
-          Restart
+          Next question
         </p>
       </div>
     </div>
-  </ng-template>
+    <ng-template #showResults>
+      <div class="results">
+        <div class="congratulations">
+          <p>Congratulations</p>
+        </div>
+        <div class="results-info">
+          <div>
+            <p>You have completed quiz</p>
+          </div>
+          <div>
+            <p>
+              You have got <span>{{quiz.correctAnswerCount}}</span> of <span>{{quiz.questions.length}}</span> right
+            </p>
+          </div>
+        </div>
+        <div (click)="restart()" class="next-button">
+          <p>
+            Restart
+          </p>
+        </div>
+      </div>
+    </ng-template>
 
-</div>
+  </div>
+</ng-template>
+
 
 
 

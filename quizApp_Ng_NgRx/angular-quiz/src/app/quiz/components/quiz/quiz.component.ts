@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {QuizService} from "../../services/quiz.service";
-import {map, Observable} from "rxjs";
+import {Observable} from "rxjs";
+import {getQuizAction} from "../../store/actions/quiz.actions";
+import {select, Store} from "@ngrx/store";
+import {isLoadingSelector, quizSelector} from "../../store/selectors";
+import {QuizStateInterface} from "../../types/quizState.interface";
 
 @Component({
   selector: 'app-quiz',
@@ -9,20 +13,17 @@ import {map, Observable} from "rxjs";
 })
 export class QuizComponent implements OnInit {
 
-  questionsLength$: Observable<number>;
-  currentQuestionIndex$: Observable<number>;
-  showResults$: Observable<boolean>;
-  correctAnswerCount$: Observable<number>;
+  quiz$: Observable<QuizStateInterface>;
+  isLoadingSelector$: Observable<boolean | undefined>;
 
-  constructor(private _service: QuizService) {
-   this.questionsLength$ = this._service.state$.pipe(map((state) => state.questions.length))
-   this.currentQuestionIndex$ = this._service.state$.pipe(map((state) => state.currentQuestionIndex + 1))
-   this.showResults$ = this._service.state$.pipe(map((state) => state.showResults))
-   this.correctAnswerCount$ = this._service.state$.pipe(map((state) => state.correctAnswerCount))
+  constructor(private _service: QuizService,
+              private _store: Store) {
+   this.quiz$ = this._store.pipe(select(quizSelector))
+   this.isLoadingSelector$ = this._store.pipe(select(isLoadingSelector))
   }
 
   ngOnInit(): void {
-    this._service.getData();
+    this._store.dispatch(getQuizAction())
   }
 
   nextQuestion() {

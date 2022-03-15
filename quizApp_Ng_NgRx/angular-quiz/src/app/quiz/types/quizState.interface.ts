@@ -8,4 +8,6 @@ export interface QuizStateInterface {
   correctAnswerCount: number;
   answers: AnswerType[];
   currentAnswer: AnswerType | null;
+  isLoading?: boolean;
+  error?: any;
 }
