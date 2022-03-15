@@ -1,6 +1,8 @@
 <div>
   <div class="question">
-    {{(question$ | async)?.question}}
+    <p>
+      {{(question$ | async)?.question}}
+    </p>
   </div>
   <div class="answers">
     <app-quiz-answer *ngFor="let answer of answers$ | async; let i = index"

@@ -1,0 +1,44 @@
+:host {
+  width: 45%;
+  display: flex;
+  border: 1px solid darkblue;
+  margin: 20px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+
+.answer {
+  &-letter {
+    height: 100px;
+    width: 100px;
+    background-color: darkblue;
+    display: flex;
+
+    p {
+      font-size: 40px;
+      color: white;
+      margin: auto;
+      padding: 0;
+    }
+  }
+  &-text {
+    display: flex;
+    width: calc(100% - 100px);
+    p {
+      width: 100%;
+      font-size: 20px;
+      color: darkblue;
+      margin: auto 20px;
+      padding: 0;
+    }
+  }
+}
+
+:host(.correct-answer) .answer-letter {
+  background-color: darkgreen;
+}
+:host(.wrong-answer) .answer-letter {
+  background-color: darkred;
+}

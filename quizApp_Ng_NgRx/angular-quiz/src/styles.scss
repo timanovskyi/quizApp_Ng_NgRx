@@ -1,0 +1,65 @@
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.quiz {
+  height: 100%;
+  display: flex;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    padding: 100px 0;
+    margin: 0 auto;
+  }
+}
+
+.score,
+.next-button,
+.congratulations {
+  max-width: 300px;
+  width: 100%;
+  background-color: darkblue;
+  color: #fff;
+  text-align: center;
+  height: 50px;
+  display: flex;
+  border-radius: 10px;
+
+  p {
+    margin: auto;
+  }
+}
+
+.next-button {
+  cursor: pointer;
+
+  &:hover {
+    background-color: darkslateblue;
+  }
+}
+
+.results-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  p {
+    margin: 10px auto;
+    font-size: 25px;
+    color: darkslateblue;
+
+    span {
+      font-weight: 700;
+    }
+  }
+}

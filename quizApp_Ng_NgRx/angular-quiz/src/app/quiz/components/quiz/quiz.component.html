@@ -1,26 +1,34 @@
 <div class="quiz">
   <div *ngIf="!(showResults$ | async) else showResults">
     <div class="score">
-      Question {{currentQuestionIndex$ | async}} / {{questionsLength$ | async}}
+      <p> Question {{currentQuestionIndex$ | async}} / {{questionsLength$ | async}}</p>
     </div>
     <app-quiz-question></app-quiz-question>
     <div class="next-button" (click)="nextQuestion()">
-      Next question
+      <p>
+        Next question
+      </p>
     </div>
   </div>
   <ng-template #showResults>
     <div class="results">
       <div class="congratulations">
-        Congratulations
+        <p>Congratulations</p>
       </div>
       <div class="results-info">
         <div>
-          You have completed quiz
+          <p>You have completed quiz</p>
         </div>
         <div>
-          You have got {{correctAnswerCount$ | async}} of {{questionsLength$ | async}} right
+          <p>
+            You have got <span>{{correctAnswerCount$ | async}}</span> of <span>{{questionsLength$ | async}}</span> right
+          </p>
         </div>
-        <div (click)="restart()" class="next-button">Restart</div>
+      </div>
+      <div (click)="restart()" class="next-button">
+        <p>
+          Restart
+        </p>
       </div>
     </div>
   </ng-template>
